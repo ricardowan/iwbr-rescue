@@ -1,0 +1,41 @@
+info:
+  name: ${spring.application.name}
+  component: Register Center Application
+
+app:
+  center: http://127.0.0.1:8000/eureka/
+
+server:
+  port: ${port:8000}
+
+logging:
+  level:
+    org.springframework: WARN
+    com.netflix: WARN
+    cn.gtmap.gtc.center: DEBUG
+
+spring:
+  application:
+    name: register-center
+    admin:
+      enabled: true
+  cloud:
+    config:
+      discovery:
+        enabled: true
+
+eureka:
+  instance:
+    hostname: ${spring.application.name}
+    preferIpAddress: true
+    lease-renewal-interval-in-seconds: 30
+    lease-expiration-duration-in-seconds: 90
+  server:
+    enableSelfPreservation: false
+    eviction-interval-timer-in-ms: 60000
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: ${app.center}
+
