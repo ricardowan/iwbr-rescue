@@ -14,6 +14,7 @@
         <module>rescue-center</module>
         <module>rescue-api</module>
         <module>rescue-server</module>
+        <module>rescue-grammar</module>
     </modules>
 
     <properties>
@@ -160,6 +161,30 @@
             <id>common</id>
             <modules>
                 <module>rescue-common</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>center</id>
+            <modules>
+                <module>rescue-center</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>api</id>
+            <modules>
+                <module>rescue-api</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>server</id>
+            <modules>
+                <module>rescue-server</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>grammar</id>
+            <modules>
+                <module>rescue-grammar</module>
             </modules>
         </profile>
     </profiles>
