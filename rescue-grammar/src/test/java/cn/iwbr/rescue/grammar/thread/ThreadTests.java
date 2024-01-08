@@ -1,13 +1,11 @@
 package cn.iwbr.rescue.grammar.thread;
 
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import sun.applet.Main;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.*;
 
 /**
  * @description: 线程测试类
@@ -44,6 +42,19 @@ public class ThreadTests {
         Thread tt2 = new Thread(futureTask, "thread3");
         tt2.start();
         System.out.println("子线程的返回值为：" + futureTask.get());
+
+        // Callable 接口结合 ExecutorService 来创建线程
+        int CPU_NUM = Runtime.getRuntime().availableProcessors();
+        ThreadFactory namedThreadFactory = (new ThreadFactoryBuilder()).setNamePrefix("query-third-").build();
+        ExecutorService pool = new ThreadPoolExecutor(CPU_NUM, CPU_NUM * 2, 1L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(5000), namedThreadFactory, new ThreadPoolExecutor.DiscardPolicy());
+        Future<String> future = pool.submit(() -> {
+            for (int i = 0; i < CPU_NUM; i++) {
+                System.out.println("cpu " + i);
+            }
+            return "Callable thread is running";
+        });
+        System.out.println(future.get());
+
         //主线程
         for (int i = 0; i < 5; i++) {
             System.out.println("主线程" + " is running" + i);
@@ -65,14 +76,34 @@ public class ThreadTests {
         td.start();
         // 线程运行（单线程）
         td.run();
-        // 线程睡眠
+        // 线程睡眠，不会释放锁，等时间一到立刻进入运行状态
         td.sleep(1000);
-        // 线程让步，当前线程愿意让出CPU的使用权，并不会使得线程进入阻塞
+        // 线程让步，调用该方法后即可进入就绪状态，当前线程愿意放弃CPU资源，不会线程阻塞，不释放锁，不保证生效。以便更好地平衡系统资源的利用
         td.yield();
-        // 线程让步
+        // 线程让步，释放锁、线程阻塞，通常用于确保线程执行的顺序
         td.join();
         // 中断线程
         td.interrupt();
+        // 判断线程是否存活
+        td.isAlive();
+        // 是否是守护线程
+        td.isDaemon();
+        // 将当前线程设置成守护线程
+        td.setDaemon(false);
+        // 设置线程的名称
+        td.setName("Thread-n-a");
+        // 程序中活跃的线程数
+        Thread.activeCount();
+        // 枚举程序中的线程
+        //Thread.enumerate();
+        // 得到当前线程
+        Thread.currentThread();
+        // 使当前线程进入等待状态，并释放对象的锁，知道调用了notify或者notifyAll后才会重新进入就绪状态等待调度
+        td.wait();
+        // 用于唤醒wait状态的同一个对象锁的单个线程，只会唤醒一个，至于唤醒的是哪一个取决于调度器的策略
+        td.notify();
+        // 用于唤醒wait状态同一个对象锁的所有线程，它会使所有处于等待状态的线程都尝试重新竞争锁，以决定哪个线程将获得锁
+        td.notifyAll();
     }
 
     @Test
