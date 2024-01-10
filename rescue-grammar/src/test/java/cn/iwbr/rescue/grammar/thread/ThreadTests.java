@@ -41,6 +41,7 @@ public class ThreadTests {
 
     // 重入锁
     private Lock lock = new ReentrantLock();
+
     private void addMoney(int money) {
         lock.lock();
         try {
@@ -232,7 +233,7 @@ public class ThreadTests {
         public void run(){
             int i = 1;
             while(!Thread.currentThread().isInterrupted()) {
-                addMoney(i);
+                synchronizedMethod(i);
                 System.out.println("Thread类型线程：【{" + Thread.currentThread().getName() + "}】 add money " + i);
                 //i++;
             }
@@ -247,7 +248,7 @@ public class ThreadTests {
         public void run() {
             int i = 1;
             while(!stop){
-                addMoney(i);
+                synchronizedBlock(i);
                 System.out.println("Runnable类型线程：【{"+ Thread.currentThread().getName() +"}】 add money " + i);
                 //i++;
             }
