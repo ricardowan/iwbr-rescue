@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @description: 线程测试类
@@ -17,6 +19,41 @@ import java.util.concurrent.*;
 @SpringBootTest
 public class ThreadTests {
 
+    private int count;
+
+    // synchronized 关键字
+    // 修饰方法
+    private synchronized void synchronizedMethod(int money) {
+        System.out.println(System.currentTimeMillis() + " 存进：" + money + "，存前值：" + count);
+        count += money;
+        System.out.println("存后count值：" + count);
+    }
+
+    // 修饰代码块
+    private void synchronizedBlock(int money) {
+        synchronized (this) {
+            System.out.println(System.currentTimeMillis() + " 代码块存进：" + money + "，存前值：" + count);
+            count += money;
+            System.out.println("代码块存后count值：" + count);
+        }
+        System.out.println("同步代码块打印！");
+    }
+
+    // 重入锁
+    private Lock lock = new ReentrantLock();
+    private void addMoney(int money) {
+        lock.lock();
+        try {
+            System.out.println(System.currentTimeMillis() + " 重入锁存进：" + money + "，存前值：" + count);
+            count += money;
+            System.out.println("重入锁存后count值：" + count);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lock.unlock();
+        }
+    }
+
     /**
      * 创建线程
      *
@@ -26,6 +63,7 @@ public class ThreadTests {
     @Test
     public void createThread() throws ExecutionException, InterruptedException {
         // Thread.start()是执行多线程特有方法，如果使用Thread.run()也会执行，但会以单线程方式执行。
+        // start是主线程会新建一个线程去执行run方法，不会占用主线程
 
         // 继承Thread类
         ThreadDemo td = new ThreadDemo("thread");
@@ -106,6 +144,9 @@ public class ThreadTests {
         td.notifyAll();
     }
 
+    /**
+     * 停止线程
+     */
     @Test
     public void stopThread(){
         RunnableTest runnableTest = new RunnableTest();
@@ -128,8 +169,57 @@ public class ThreadTests {
      * 线程同步
      */
     @Test
-    public void threadSynchronisation(){
+    public void threadSynchronisation() throws ExecutionException, InterruptedException {
+        // 继承Thread类
+        ThreadDemo td = new ThreadDemo("thread");
+        td.start();
 
+        // 实现Runnable接口
+        RunnableTest runnableTest = new RunnableTest();
+        Thread tt = new Thread(runnableTest, "thread1");
+        tt.start();
+
+        // Callable 接口结合 ExecutorService 来创建线程
+        int CPU_NUM = Runtime.getRuntime().availableProcessors();
+        ThreadFactory namedThreadFactory = (new ThreadFactoryBuilder()).setNamePrefix("query-third-").build();
+        ExecutorService pool = new ThreadPoolExecutor(CPU_NUM, CPU_NUM * 2, 1L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue(5000), namedThreadFactory, new ThreadPoolExecutor.DiscardPolicy());
+        Future<String> future = pool.submit(new CallableTest());
+        System.out.println(future.get());
+
+        runnableTest.setStop(true);
+        td.interrupt();
+    }
+
+    /**
+     * 线程池
+     */
+    @Test
+    public void threadPool(){
+        int CPU_NUM = Runtime.getRuntime().availableProcessors();
+        ThreadFactory threadFactory = (new ThreadFactoryBuilder()).setNamePrefix("query-third-").build();
+
+        // executor
+        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1, threadFactory);
+        fixedThreadPool.submit(() -> {
+            System.out.println("FixedThreadPool!");
+            return "fixedThreadPool started";
+        });
+        ExecutorService cachedThreadPool = Executors.newCachedThreadPool(threadFactory);
+        cachedThreadPool.execute(() -> {
+            System.out.println("CachedThreadPool!");
+        });
+        ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(1, threadFactory);
+        scheduledThreadPool.submit(() -> {
+            System.out.println("ScheduledThreadPool!");
+            return "ScheduledThreadPool started";
+        });
+
+        // 实现ExecutorService
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, Integer.MAX_VALUE, 1L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(500), threadFactory, new ThreadPoolExecutor.DiscardPolicy());
+        threadPoolExecutor.submit(() ->{
+            System.out.println("ThreadPoolExecutor!");
+            return "ThreadPoolExecutor started";
+        });
     }
 
     //继承Thread类
@@ -140,10 +230,11 @@ public class ThreadTests {
         }
         //重写run方法。
         public void run(){
-            int i = 0;
+            int i = 1;
             while(!Thread.currentThread().isInterrupted()) {
-                System.out.println("Thread类型线程：【{" + Thread.currentThread().getName() + "}】 is running" + i);
-                i++;
+                addMoney(i);
+                System.out.println("Thread类型线程：【{" + Thread.currentThread().getName() + "}】 add money " + i);
+                //i++;
             }
         }
     }
@@ -154,10 +245,11 @@ public class ThreadTests {
 
         @Override
         public void run() {
-            int i = 0;
+            int i = 1;
             while(!stop){
-                System.out.println("Runnable类型线程：【{"+ Thread.currentThread().getName() +"}】 is running" + i);
-                i++;
+                addMoney(i);
+                System.out.println("Runnable类型线程：【{"+ Thread.currentThread().getName() +"}】 add money " + i);
+                //i++;
             }
         }
 
@@ -170,11 +262,12 @@ public class ThreadTests {
     class CallableTest implements Callable<String> {
 
         @Override
-        public String call() throws Exception {
+        public String call() {
             for (int i = 0; i < 5; i++){
-                System.out.println("Callable类型线程：【{"+ Thread.currentThread().getName() +"}】 is running" + i);
+                addMoney(i);
+                System.out.println("Callable类型线程：【{"+ Thread.currentThread().getName() +"}】 add money" + i);
             }
-            return "Callable类型线程已运行完毕并返回：你好！";
+            return "Callable类型线程已运行完毕并返回：" + count;
         }
     }
 }
