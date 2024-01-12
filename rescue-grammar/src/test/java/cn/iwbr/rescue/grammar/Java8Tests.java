@@ -85,6 +85,9 @@ public class Java8Tests {
         Addition.addTwoNumbers3(3, 2);
     }
 
+    /**
+     * optional测试类
+     */
     @Test
     public void optionalTest(){
 
@@ -115,6 +118,9 @@ public class Java8Tests {
         String result2 = optional.orElseThrow(() -> new IllegalArgumentException("Value not present"));
     }
 
+    /**
+     * stream流测试类
+     */
     @Test
     public void streamTest(){
 
