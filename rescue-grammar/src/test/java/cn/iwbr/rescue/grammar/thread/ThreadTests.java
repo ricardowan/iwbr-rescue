@@ -149,7 +149,7 @@ public class ThreadTests {
      * 停止线程
      */
     @Test
-    public void stopThread(){
+    public void stopThread() {
         RunnableTest runnableTest = new RunnableTest();
         Thread td = new Thread(runnableTest, "stopThread");
         td.start();
@@ -195,7 +195,7 @@ public class ThreadTests {
      * 线程池
      */
     @Test
-    public void threadPool(){
+    public void threadPool() {
         int CPU_NUM = Runtime.getRuntime().availableProcessors();
         ThreadFactory threadFactory = (new ThreadFactoryBuilder()).setNamePrefix("query-third-").build();
 
@@ -217,22 +217,23 @@ public class ThreadTests {
 
         // 实现ExecutorService
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, Integer.MAX_VALUE, 1L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(500), threadFactory, new ThreadPoolExecutor.DiscardPolicy());
-        threadPoolExecutor.submit(() ->{
+        threadPoolExecutor.submit(() -> {
             System.out.println("ThreadPoolExecutor!");
             return "ThreadPoolExecutor started";
         });
     }
 
     //继承Thread类
-    class ThreadDemo extends Thread{
+    class ThreadDemo extends Thread {
         //设置线程名称
-        ThreadDemo(String name){
+        ThreadDemo(String name) {
             super(name);
         }
+
         //重写run方法。
-        public void run(){
+        public void run() {
             int i = 1;
-            while(!Thread.currentThread().isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted()) {
                 synchronizedMethod(i);
                 System.out.println("Thread类型线程：【{" + Thread.currentThread().getName() + "}】 add money " + i);
                 //i++;
@@ -241,15 +242,15 @@ public class ThreadTests {
     }
 
     // 实现Runnable接口
-    class RunnableTest implements Runnable{
+    class RunnableTest implements Runnable {
         private volatile boolean stop = false;
 
         @Override
         public void run() {
             int i = 1;
-            while(!stop){
+            while (!stop) {
                 synchronizedBlock(i);
-                System.out.println("Runnable类型线程：【{"+ Thread.currentThread().getName() +"}】 add money " + i);
+                System.out.println("Runnable类型线程：【{" + Thread.currentThread().getName() + "}】 add money " + i);
                 //i++;
             }
         }
@@ -264,9 +265,9 @@ public class ThreadTests {
 
         @Override
         public String call() {
-            for (int i = 0; i < 5; i++){
+            for (int i = 0; i < 5; i++) {
                 addMoney(i);
-                System.out.println("Callable类型线程：【{"+ Thread.currentThread().getName() +"}】 add money" + i);
+                System.out.println("Callable类型线程：【{" + Thread.currentThread().getName() + "}】 add money" + i);
             }
             return "Callable类型线程已运行完毕并返回：" + count;
         }

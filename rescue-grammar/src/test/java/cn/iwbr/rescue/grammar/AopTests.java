@@ -27,6 +27,7 @@ public class AopTests {
     public void ReflectTest() throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchFieldException {
 
         // ****************** 构建Class实例 ****************** //
+
         // 获取类对象的第一种方式（这种方式在实际开发中应用较多）
         Class clazz = Class.forName("cn.iwbr.rescue.grammar.entity.Staff");
         // 获取类对象的第二种方式
@@ -35,6 +36,7 @@ public class AopTests {
         Class pClass3 = new Staff().getClass();
 
         // ****************** 根据Class实例获取类的所有信息 ****************** //
+
         // 根据名称获取Public修饰的字段包括继承自父类的字段
         Field field = clazz.getField("test");
         // 会返回所有Public修饰的字段包括继承自父类的字段
@@ -55,6 +57,8 @@ public class AopTests {
         // 获取父类与直接实现接口
         Class superclass = clazz.getSuperclass();
         Class[] interfaces = clazz.getInterfaces();
+
+        // ****************** 根据Class实例创建对象 ****************** //
 
         // 获取构造函数
         Constructor con = clazz.getConstructor(boolean.class);

@@ -72,7 +72,7 @@ public class Java8Tests {
      * 函数式接口测试
      */
     @Test
-    public void functionalInterfaceTest(){
+    public void functionalInterfaceTest() {
         Addition addition = (a, b) -> a + b;
 
         // 调用抽象方法
@@ -89,11 +89,11 @@ public class Java8Tests {
      * optional测试类
      */
     @Test
-    public void optionalTest(){
+    public void optionalTest() {
 
         // 创建一个非空值的Optional对象，如果传入null则会抛出异常：NullPointerException
         Optional<String> optional = Optional.of("Hello, World!");
-        
+
         // 创建一个允许传入null值的Optional对象
         String str = "Hello, World!";
         Optional<String> optionalNullable = Optional.ofNullable(null);
@@ -122,7 +122,7 @@ public class Java8Tests {
      * stream流测试类
      */
     @Test
-    public void streamTest(){
+    public void streamTest() {
 
         // **************** Stream 的创建 **************** //
 
@@ -172,7 +172,7 @@ public class Java8Tests {
         List<String> collectedList = fruitList.stream().collect(Collectors.toList());
 
         // 将元素逐个结合起来，得到一个结果
-        String names = fruitList.stream().reduce((a,b) -> a.concat(",").concat(b)).get();
+        String names = fruitList.stream().reduce((a, b) -> a.concat(",").concat(b)).get();
         System.out.println(names);
 
         // 检查是否至少一个元素匹配给定的条件
