@@ -68,7 +68,7 @@ public class AopTests {
         Staff staff1 = (Staff) constructor.newInstance("M200084", "中级开发工程师", "政务开发一部", 12000);
 
         // 获取字段值
-        Field check = staff.getClass().getDeclaredField("workNo");
+        Field check = staff.getClass().getDeclaredField("check");
         // 设置成私有的属性，根据Field对象是没法获取值的，想获取值只有两个方法：一个是设置setAccessible=true，一个是通过public修饰的get方法获取。
         check.setAccessible(true);
         System.out.println("check：" + check.get(staff));
@@ -78,4 +78,38 @@ public class AopTests {
         method1.setAccessible(true);
         System.out.println("workNo：" + method1.invoke(staff1));
     }
+
+    /**
+     * 静态代理
+     */
+    @Test
+    public void staticProxy() {
+
+    }
+
+    /**
+     * JDK动态代理
+     */
+    @Test
+    public void JdkDynamicProxy(){
+
+    }
+
+    /**
+     * Cglib动态代理
+     */
+    @Test
+    public void CglibDynamicProxy(){
+
+    }
+
+    /**
+     * AspectJ
+     */
+    @Test
+    public void AspectJ(){
+
+    }
+
+
 }
