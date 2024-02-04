@@ -1,14 +1,15 @@
 package cn.iwbr.rescue.grammar;
 
 import cn.iwbr.rescue.grammar.entity.Staff;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.cglib.proxy.Enhancer;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 
 /**
  * @description: AOP切片编程测试
@@ -84,7 +85,12 @@ public class AopTests {
      */
     @Test
     public void staticProxy() {
-
+        // 被代理类
+        MyInterfaceImpl myInterface = new MyInterfaceImpl();
+        // 代理类
+        StaticProxy staticProxy = new StaticProxy(myInterface);
+        // 使用代理类的方法调用被代理类的方法
+        staticProxy.someMethod();
     }
 
     /**
@@ -92,15 +98,32 @@ public class AopTests {
      */
     @Test
     public void JdkDynamicProxy(){
-
+        // 创建一个被代理对象的实例，这个实例可以来自很多地方，比如在spring里面主要来自SpringIoc容器管理的bean的实例
+        MyInterfaceImpl myInterface = new MyInterfaceImpl();
+        // 自定义一个InvocationHandler的实现类并实现invoke方法，在这个方法里面实现切面功能
+        MyInvocationHandler invocationHandler = new MyInvocationHandler(myInterface);
+        // 使用Proxy的newProxyInstance方法创建一个代理对象示例
+        MyInterface proxyMyInterface = (MyInterface) Proxy.newProxyInstance(MyInterface.class.getClassLoader(), new Class[]{MyInterface.class}, invocationHandler);
+        // 通过代理对象调被代理对象的方法
+        proxyMyInterface.someMethod();
     }
 
     /**
      * Cglib动态代理
      */
     @Test
-    public void CglibDynamicProxy(){
-
+    public void CGLibDynamicProxy(){
+        // 创建一个被代理对象的实例，这个实例可以来自很多地方，比如在spring里面主要来自SpringIoc容器管理的bean的实例
+        NonInterfaceClass nonInterfaceClass = new NonInterfaceClass();
+        // 自定义一个MethodInterceptor的实现类并实现intercept方法，在这个方法里面实现切面功能
+        CGLibInterceptor cgLibInterceptor = new CGLibInterceptor(nonInterfaceClass);
+        // 使用Enhancer创建一个代理对象实例
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(NonInterfaceClass.class);
+        enhancer.setCallback(cgLibInterceptor);
+        NonInterfaceClass proxyNonInterfaceClass = (NonInterfaceClass) enhancer.create();
+        // 通过代理对象实例调用被代理对象的方法
+        proxyNonInterfaceClass.someMethod();
     }
 
     /**
@@ -111,5 +134,73 @@ public class AopTests {
 
     }
 
+    interface MyInterface{
+        void someMethod();
+    }
 
+    class MyInterfaceImpl implements MyInterface {
+
+        @Override
+        public void someMethod() {
+            System.out.println("被代理的类的方法！");
+        }
+    }
+
+    @NoArgsConstructor
+    class NonInterfaceClass{
+
+        public void someMethod(){
+            System.out.println("没有实现接口的类！");
+        }
+    }
+
+    class StaticProxy {
+        private MyInterfaceImpl myInterface;
+
+        public StaticProxy(MyInterfaceImpl myInterface) {
+            this.myInterface = myInterface;
+        }
+
+        public void someMethod() {
+            System.out.println("静态代理--前织入！");
+            this.myInterface.someMethod();
+            System.out.println("静态代理--前织入！");
+        }
+    }
+
+    class MyInvocationHandler implements InvocationHandler {
+
+        private Object proxyObject;
+
+        public MyInvocationHandler(Object proxyObject) {
+            this.proxyObject = proxyObject;
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            System.out.println("JDK动态代理--前织入！");
+
+            Object result = method.invoke(proxyObject, args);
+
+            System.out.println("JDK动态代理--后织入！");
+            return result;
+        }
+    }
+
+    class CGLibInterceptor implements MethodInterceptor {
+
+        private Object nonInterfaceClass;
+
+        public CGLibInterceptor(Object nonInterfaceClass) {
+            this.nonInterfaceClass = nonInterfaceClass;
+        }
+
+        @Override
+        public Object intercept(Object obj, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
+            System.out.println("CGLib动态代理--前织入！");
+            Object result = methodProxy.invokeSuper(nonInterfaceClass, args);
+            System.out.println("CGLib动态代理--前织入！");
+            return result;
+        }
+    }
 }
