@@ -12,6 +12,11 @@ import lombok.Data;
 public class Human {
 
     /**
+     * id
+     */
+    private String id;
+
+    /**
      * 名字
      */
     private String name;

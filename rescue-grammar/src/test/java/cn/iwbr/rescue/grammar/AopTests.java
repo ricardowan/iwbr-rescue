@@ -1,6 +1,7 @@
 package cn.iwbr.rescue.grammar;
 
 import cn.iwbr.rescue.grammar.entity.Staff;
+import cn.iwbr.rescue.grammar.service.impl.StaffServiceImpl;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.proxy.Enhancer;
@@ -131,7 +132,14 @@ public class AopTests {
      */
     @Test
     public void AspectJ(){
-
+        StaffServiceImpl staffService = new StaffServiceImpl();
+        Staff staff = new Staff();
+        staff.setName("王晓明");
+        staff.setAge("27");
+        Staff newStaff = staffService.addStaff(staff);
+        System.out.println(newStaff.getName());
+        System.out.println(newStaff.getTest());
+        System.out.println(newStaff.getId());
     }
 
     interface MyInterface{
