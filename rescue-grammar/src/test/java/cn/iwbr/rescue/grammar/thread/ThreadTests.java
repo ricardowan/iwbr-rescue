@@ -7,7 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @description: 线程测试类
@@ -214,6 +216,11 @@ public class ThreadTests {
             System.out.println("ScheduledThreadPool!");
             return "ScheduledThreadPool started";
         });
+        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+        singleThreadExecutor.submit(() -> {
+            System.out.println("singleThreadExecutor!");
+            return "singleThreadExecutor started";
+        });
 
         // 实现ExecutorService
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, Integer.MAX_VALUE, 1L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>(500), threadFactory, new ThreadPoolExecutor.DiscardPolicy());
@@ -221,6 +228,83 @@ public class ThreadTests {
             System.out.println("ThreadPoolExecutor!");
             return "ThreadPoolExecutor started";
         });
+    }
+
+    @Test
+    public void CountDownLatchExample() throws InterruptedException {
+        int numThreads = 5;
+        CountDownLatch latch = new CountDownLatch(numThreads);
+
+        for (int i = 0; i < numThreads; i++) {
+            new Thread(() -> {
+                System.out.println(Thread.currentThread().getName() + " is working...");
+                // 模拟线程工作
+                try {
+                    Thread.sleep((long) (Math.random() * 1000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName() + " finished.");
+                latch.countDown(); // 每个线程完成后计数器减一
+            }).start();
+        }
+
+        latch.await(); // 主线程等待所有线程完成
+        System.out.println("All threads have finished. Continue execution.");
+    }
+
+    @Test
+    public void CyclicBarrierExample(){
+        int numThreads = 3;
+        CyclicBarrier barrier = new CyclicBarrier(numThreads, () -> {
+            System.out.println("All threads have reached the barrier. Continue execution.");
+        });
+
+        for (int i = 0; i < numThreads; i++) {
+            new Thread(() -> {
+                System.out.println(Thread.currentThread().getName() + " is working...");
+                // 模拟线程工作
+                try {
+                    Thread.sleep((long) (Math.random() * 1000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(Thread.currentThread().getName() + " reached the barrier.");
+                try {
+                    barrier.await(); // 等待其他线程到达屏障
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
+
+    @Test
+    public void SemaphoreExample(){
+        int numThreads = 5;
+        Semaphore semaphore = new Semaphore(2); // 只允许同时有两个线程访问资源
+
+        for (int i = 0; i < numThreads; i++) {
+            new Thread(() -> {
+                try {
+                    semaphore.acquire(); // 获取许可证
+                    System.out.println(Thread.currentThread().getName() + " is accessing resource.");
+                    // 模拟线程访问资源
+                    Thread.sleep((long) (Math.random() * 1000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    semaphore.release(); // 释放许可证
+                    System.out.println(Thread.currentThread().getName() + " has released resource.");
+                }
+            }).start();
+        }
+    }
+
+    public synchronized void LockTest(){
+        ReentrantLock lock = new ReentrantLock();
+
+        ReadWriteLock lock1 = new ReentrantReadWriteLock();
     }
 
     //继承Thread类
