@@ -52,7 +52,7 @@ public class LockTests {
     private CountDownLatch latch = new CountDownLatch(12);
 
     // 循环屏障
-    CyclicBarrier barrier = new CyclicBarrier(5, () -> {
+    private CyclicBarrier barrier = new CyclicBarrier(5, () -> {
         System.out.println("所有线程：都达到屏障点！");
         System.out.println("此时count的值为：" + count);
     });

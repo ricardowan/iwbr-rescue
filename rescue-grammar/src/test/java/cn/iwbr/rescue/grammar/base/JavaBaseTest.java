@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class JavaBaseTest {
 
     @Test
-    public void ExplicitTypeCasting() {
+    public void ExplicitTypeCasting(){
         short i = 1;
         i = (short) (i + 1);
         i += 1;
@@ -41,13 +41,13 @@ public class JavaBaseTest {
 
     @Test
     public void test01() {
-//        String str1 = new StringBuilder("jaa").append("va").toString();
-//        String str2 = str1.intern();
-//        System.out.println(str1 == str2);
-//
-//        String str3 = new StringBuilder("hello").append("world").toString();
-//        String str4 = str3.intern();
-//        System.out.println(str3 == str4);
+        String str1 = new StringBuilder("jaa").append("va").toString();
+        String str2 = str1.intern();
+        System.out.println(str1 == str2);
+
+        String str3 = new StringBuilder("hello").append("world").toString();
+        String str4 = str3.intern();
+        System.out.println(str3 == str4);
 
         String str6 = "hello world";
         String str5 = "hello world";
@@ -71,7 +71,7 @@ public class JavaBaseTest {
     }
 
     @Test
-    public void ListTest(){
+    public void MapTest(){
         List list = new ArrayList();
         List test = new LinkedList();
         test.add("adsad");
@@ -113,6 +113,58 @@ public class JavaBaseTest {
             Map.Entry<String, String> next = iterator.next();
             System.out.println(next.getKey() + "=" + next.getValue());
         }
+    }
+
+    @Test
+    public void ScannerTest(){
+        // 创建 Scanner 对象，从标准输入（键盘）读取输入
+        Scanner scanner = new Scanner(System.in);
+
+        // 读取整数
+        System.out.print("请输入一个整数：");
+        int num = scanner.nextInt();
+        System.out.println("你输入的整数是：" + num);
+
+        // 读取字符串
+        System.out.print("请输入一个字符串：");
+        String str = scanner.next(); // 读取字符串，遇到空白字符（空格、换行等）停止
+        System.out.println("你输入的字符串是：" + str);
+
+        // 关闭 Scanner 对象
+        scanner.close();
+
+        List<Integer> list = new ArrayList<>();
+    }
+
+    @Test
+    public void ListTest(){
+
+        LinkedList<String> list = new LinkedList<>();
+
+        List<String> list1 = new ArrayList<>();
+
+        Stack<String> stack = new Stack();
+        String string = stack.push("String");
+        String pop = stack.pop();
+        String peek = stack.peek();
+
+        ArrayDeque<String> queue = new ArrayDeque();
+        queue.offer("string");
+        queue.poll();
+
+        queue.addFirst("queue");
+        queue.offerFirst("asdaj");
+        queue.removeFirst();
+        queue.pollFirst();
+        queue.getFirst();
+        queue.peekFirst();
+
+        PriorityQueue priorityQueue = new PriorityQueue();
+        priorityQueue.offer("");
+        priorityQueue.poll();
+
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
     }
 
     public class Person extends AbstractClassTest{
