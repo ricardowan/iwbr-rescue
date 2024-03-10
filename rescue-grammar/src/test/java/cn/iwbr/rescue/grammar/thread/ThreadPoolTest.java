@@ -50,7 +50,6 @@ public class ThreadPoolTest {
         System.out.println("fixed Thread Pool");
     }
 
-
     @Test
     public void cachedThreadPoolTest(){
         // Executors.newCachedThreadPool();
@@ -86,25 +85,15 @@ public class ThreadPoolTest {
         scheduledThreadPool.shutdown();
     }
 
-    public void test(){
-        ThreadFactoryBuilder threadFactoryBuilder = new ThreadFactoryBuilder();
-        threadFactoryBuilder.setNamePrefix("pool-thread-");
-        ThreadFactory factory = threadFactoryBuilder.build();
-
-        Executors.newSingleThreadExecutor();
-        Executors.newSingleThreadExecutor(factory);
-
-        Executors.newFixedThreadPool(2);
-        Executors.newFixedThreadPool(2, factory);
-
-        Executors.newCachedThreadPool();
-        Executors.newCachedThreadPool(factory);
-
-        Executors.newScheduledThreadPool(2);
-        Executors.newScheduledThreadPool(2, factory);
-
-        ExecutorService executorService = new ThreadPoolExecutor(2, cpuNumber * 2, 5L, TimeUnit.MINUTES,
+    @Test
+    public void ThreadPoolExecutorTest() throws InterruptedException {
+        ExecutorService executorService = new ThreadPoolExecutor(0, cpuNumber + 1, 5L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(), factory, new ThreadPoolExecutor.AbortPolicy());
+        executorService.submit(() -> {
+            System.out.println("线程测试");
+        });
+
+        Thread.sleep(5000);
     }
 
 }
