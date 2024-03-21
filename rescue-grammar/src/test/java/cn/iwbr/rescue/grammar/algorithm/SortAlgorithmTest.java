@@ -110,7 +110,10 @@ public class SortAlgorithmTest {
         }
     }
 
-
+    /**
+     * 快速排序测试
+     */
+    @Test
     public void quickSortTest(){
         int[] array = {10, 5, 7, 2, 3, 4, 2, 6, 8, 9};
         quickSort(array, 0, array.length -1);
@@ -150,5 +153,32 @@ public class SortAlgorithmTest {
         arr[l] = arr[j];
         arr[j] = temp;
         return j;
+    }
+
+    /**
+     * 二分查找法测试
+     */
+    @Test
+    public void binarySearchTest(){
+        int[] array = {10, 5, 7, 2, 3, 4, 2, 6, 8, 9};
+        intersectSort(array);
+        int i = binarySearch(array, 100);
+        System.out.println("i = " + i);
+    }
+
+    private int binarySearch(int[] arr, int target){
+        // 注意将已经比较过值的索引移除，不要进入下次查询，避免在查询不到数据的时候导致无限循环
+        int left = 0, right = arr.length - 1, mid;
+        while (left <= right) {
+            mid = (right + left) >>> 1;
+            if (arr[mid] == target) {
+                return mid;
+            } else if (arr[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1;
     }
 }
