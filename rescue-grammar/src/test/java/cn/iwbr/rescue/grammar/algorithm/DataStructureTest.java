@@ -20,11 +20,18 @@ public class DataStructureTest {
         stack.push("wang");
         stack.push("wbr");
         stack.push("nihao");
+        stack.pop();
+        stack.peek();
 
         ArrayDeque<String> arrayDeque = new ArrayDeque();
         arrayDeque.push("wang");
         arrayDeque.push("wbr");
         arrayDeque.push("nihao");
+        arrayDeque.poll();
+        arrayDeque.peek();
+
+        arrayDeque.getFirst();
+        arrayDeque.pollLast();
 
     }
 
