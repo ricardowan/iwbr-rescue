@@ -167,6 +167,38 @@ public class JavaBaseTest {
         PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
     }
 
+    int total = 0;
+    List list = new ArrayList();
+
+    @Test
+    public void minCostConnectPoints(){
+        int[][] points = {{0,0},{2,2},{3,10},{5,2},{7,0}};
+        for (int i = 0; i < points.length; i++) {
+            getMinPoint(points, i);
+        }
+        System.out.println(total);
+    }
+
+    public void getMinPoint(int[][] points, int index) {
+        int min = 1000000;
+        int minIndex = 0;
+        int x = points[index][0];
+        int y = points[index][1];
+
+        for (int i = 0; i < points.length; i++) {
+            if(i == index || list.contains(String.valueOf(i)+String.valueOf(index))){
+                continue;
+            }
+            int newMin = Math.abs(x - points[i][0]) + Math.abs(y - points[i][1]);
+            if (newMin < min) {
+                min = newMin;
+                minIndex = i;
+            }
+        }
+        list.add(String.valueOf(index)+String.valueOf(minIndex));
+        total = total + min;
+    }
+
     public class Person extends AbstractClassTest{
 
         private String gender;

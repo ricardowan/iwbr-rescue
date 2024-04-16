@@ -7,9 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @description: 线程测试类
@@ -119,7 +117,7 @@ public class ThreadTests {
         td.run();
         // 线程睡眠，不会释放锁，等时间一到立刻进入运行状态
         td.sleep(1000);
-        // 线程让步，调用该方法后即可进入就绪状态，当前线程愿意放弃CPU资源，不会线程阻塞，不释放锁，不保证生效。以便更好地平衡系统资源的利用
+        // 线程让步，当前线程愿意放弃CPU资源，不会线程阻塞，不释放锁，不保证生效。以便更好地平衡系统资源的利用
         td.yield();
         // 线程让步，释放锁、线程阻塞，通常用于确保线程执行的顺序
         td.join();
