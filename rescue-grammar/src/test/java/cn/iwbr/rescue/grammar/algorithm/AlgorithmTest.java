@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
+import java.util.Scanner;
 
 /**
  * @description: 算法测试
@@ -35,8 +36,6 @@ public class AlgorithmTest {
 
     }
 
-
-
     private static int minCoins(int[] coins, int amount) {
         // 对硬币面额进行升序排序
         Arrays.sort(coins);
@@ -60,5 +59,29 @@ public class AlgorithmTest {
         private int to;
 
         private int weight;
+    }
+
+    @Test
+    public void validCharacters(){
+        Scanner scanner = new Scanner(System.in);
+
+        String strS = scanner.next();
+        String strL = scanner.next();
+
+        int indexS = 0;
+        int indexL = 0;
+
+        while (indexS < strS.length() && indexL < strL.length()){
+            if(strS.charAt(indexS) == strL.charAt(indexL)){
+                indexS++;
+            }
+            indexL++;
+        }
+
+        int finalIndex = -1;
+        if(indexS == strS.length()-1){
+            finalIndex =  indexL-1;
+        }
+        System.out.println(finalIndex);
     }
 }
