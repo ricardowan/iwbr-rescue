@@ -88,7 +88,7 @@ public class SortAlgorithmTest {
      * 思路：
      */
     @Test
-    public void intersectSortTest(){
+    public void intersectSortTest() {
         int[] array = {10, 5, 7, 2, 3, 4, 2, 6, 8, 9};
         intersectSort(array);
         System.out.println(Arrays.toString(array));
@@ -99,14 +99,13 @@ public class SortAlgorithmTest {
             int temp = arr[i];
             int j = i - 1;
             while (j >= 0) {
-                if (temp < arr[j]) {
-                    arr[j + 1] = arr[j];
-                }else{
+                if (temp > arr[j]) {
                     break;
                 }
+                arr[j + 1] = arr[j];
                 j--;
             }
-            arr[j+1] = temp;
+            arr[j + 1] = temp;
         }
     }
 
@@ -114,9 +113,9 @@ public class SortAlgorithmTest {
      * 快速排序测试
      */
     @Test
-    public void quickSortTest(){
+    public void quickSortTest() {
         int[] array = {10, 5, 7, 2, 3, 4, 2, 6, 8, 9};
-        quickSort(array, 0, array.length -1);
+        quickSort(array, 0, array.length - 1);
         System.out.println(Arrays.toString(array));
     }
 
@@ -159,14 +158,14 @@ public class SortAlgorithmTest {
      * 二分查找法测试
      */
     @Test
-    public void binarySearchTest(){
+    public void binarySearchTest() {
         int[] array = {10, 5, 7, 2, 3, 4, 2, 6, 8, 9};
         intersectSort(array);
         int i = binarySearch(array, 100);
         System.out.println("i = " + i);
     }
 
-    private int binarySearch(int[] arr, int target){
+    private int binarySearch(int[] arr, int target) {
         // 注意将已经比较过值的索引移除，不要进入下次查询，避免在查询不到数据的时候导致无限循环
         int left = 0, right = arr.length - 1, mid;
         while (left <= right) {
