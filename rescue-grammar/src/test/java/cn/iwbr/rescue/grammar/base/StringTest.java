@@ -1,5 +1,6 @@
 package cn.iwbr.rescue.grammar.base;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -10,7 +11,7 @@ public class StringTest {
     static int res = Integer.MAX_VALUE;
 
     public static void main(String[] args) {
-        gameTest();
+        hotListOfOpenSourceProjects();
     }
 
     /**
@@ -110,7 +111,7 @@ public class StringTest {
             total += num;
             intArray[i] = num;
         }
-        gameDfs(intArray, 0,0,0);
+        gameDfs(intArray, 0, 0, 0);
         System.out.println(res);
         scanner.close();
     }
@@ -159,5 +160,187 @@ public class StringTest {
         }
         Collections.sort(list);
         System.out.println(String.join(" ", list));
+    }
+
+    /**
+     * 最长子串
+     */
+    public static void theLongestCharacter() {
+        Scanner scanner = new Scanner(System.in);
+
+        String str = scanner.next();
+
+        int maxLength = -1;
+        boolean hasLetter = false;
+        int l = 0, r = 0;
+
+        Deque<Integer> letterIndex = new ArrayDeque<>();
+
+        while (r < str.length()) {
+            char c = str.charAt(r);
+
+            if (Character.isLetter(c)) {
+                hasLetter = true;
+                letterIndex.addLast(r);
+
+                if (letterIndex.size() > 1) {
+                    l = letterIndex.removeFirst() + 1;
+                }
+
+                if (r == l) {
+                    r++;
+                    continue;
+                }
+            }
+
+            maxLength = Math.max(maxLength, r - l + 1);
+            r++;
+        }
+
+        if (!hasLetter) {
+            System.out.println(-1);
+        } else {
+            System.out.println(maxLength);
+        }
+    }
+
+    /**
+     * 拆分均衡字符串
+     */
+    public static void splitEqualizationString() {
+        Scanner scanner = new Scanner(System.in);
+
+        String next = scanner.next();
+
+        char[] charArray = next.toCharArray();
+        int count = 0;
+        int dd = 0;
+        for (char c : charArray) {
+            if (c == 'X') {
+                dd++;
+            } else if (c == 'Y') {
+                dd--;
+            }
+            if (dd == 0) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+
+    /**
+     * 机器人搬砖
+     */
+    public static void robotSlabs() {
+        Scanner scanner = new Scanner(System.in);
+
+        int[] nums = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        if (nums.length > 8) {
+            System.out.println(-1);
+            return;
+        }
+
+        Arrays.sort(nums);
+        int l = 1, r = nums[nums.length - 1];
+        while (l < r) {
+            int mid = l + (r - l) / 2;
+            if (canFinish(nums, 8, mid)) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        System.out.println(l);
+    }
+
+    /**
+     * 出租车司机的伎俩
+     */
+    public static void cabDriverTricks(){
+        Scanner scanner = new Scanner(System.in);
+
+        String str = scanner.nextLine();
+        int real = 0;
+        for (char c : str.toCharArray()){
+            int i = c - '0';
+            if(i > 4){
+                i--;
+            }
+            real = real * 9 + i;
+        }
+        System.out.println(real);
+    }
+
+    /**
+     * 最富有小家庭
+     */
+    public static void richestSmallFamily(){
+        Scanner scanner = new Scanner(System.in);
+
+        int n = Integer.parseInt(scanner.nextLine());
+
+        int[] nums = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        Map<Integer, Integer> map = new HashMap<>();
+        while(n > 1 && scanner.hasNextLine()){
+            int[] single = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            int p = single[0];
+            int c = single[1];
+            if (map.containsKey(p)) {
+                map.put(p, map.getOrDefault(p, 0) + nums[c-1]);
+            } else {
+                map.put(p, nums[p-1] + nums[c-1]);
+            }
+            n --;
+        }
+        List<Integer> sortList = map.values().stream().sorted(Integer::compareTo).collect(Collectors.toList());
+
+        System.out.println(sortList.get(sortList.size()-1));
+    }
+
+    /**
+     * 开源项目热门列表
+     */
+    public static void hotListOfOpenSourceProjects(){
+//        5
+//        5 6 6 1 2
+//        camila 13 88 46 26 169
+//        grace 64 38 87 23 103
+//        lucas 91 79 98 154 79
+//        leo 29 27 36 43 178
+//        ava 29 27 36 43 178
+        Scanner scanner = new Scanner(System.in);
+
+        int n = Integer.parseInt(scanner.nextLine());
+
+        int[] nums = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        Map<String, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            String[] project = scanner.nextLine().split(" ");
+            map.put(project[0], getSum(nums, project));
+        }
+
+        map.entrySet().stream().sorted((entry, entry1) -> {
+            if (!entry.getValue().equals(entry1.getValue())) {
+                return entry1.getValue() - entry.getValue();
+            } else {
+                return entry.getKey().compareToIgnoreCase(entry1.getKey());
+            }
+        }).collect(Collectors.toList()).forEach(f -> System.out.println(f.getKey()));
+    }
+
+    /**
+     * 获取总和
+     *
+     * @return int
+     */
+    private static int getSum(int[] nums, String[] project){
+        int sum = 0;
+        for(int i = 0; i < nums.length; i++){
+            sum = sum + nums[i] * Integer.parseInt(project[i+1]);
+        }
+        return sum;
     }
 }
