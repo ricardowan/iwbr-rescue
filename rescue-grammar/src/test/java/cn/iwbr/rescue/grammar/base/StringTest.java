@@ -11,7 +11,7 @@ public class StringTest {
     static int res = Integer.MAX_VALUE;
 
     public static void main(String[] args) {
-        hotListOfOpenSourceProjects();
+        landDistribution();
     }
 
     /**
@@ -116,14 +116,6 @@ public class StringTest {
         scanner.close();
     }
 
-    /**
-     * 游戏dfs
-     *
-     * @param nums         nums
-     * @param index        索引
-     * @param count        计数
-     * @param currentTotal 当前总计
-     */
     private static void gameDfs(int[] nums, int index, int count, int currentTotal) {
 
         if (count == 5) {
@@ -146,20 +138,6 @@ public class StringTest {
             total += Math.ceil(i * 1.0 / k);
         }
         return total <= h;
-    }
-
-    public void test() {
-        Scanner in = new Scanner(System.in);
-        int t = in.nextInt();
-        List<String> list = new ArrayList();
-        while (in.hasNext()) {
-            if (list.size() >= t) {
-                break;
-            }
-            list.add(in.next());
-        }
-        Collections.sort(list);
-        System.out.println(String.join(" ", list));
     }
 
     /**
@@ -257,14 +235,14 @@ public class StringTest {
     /**
      * 出租车司机的伎俩
      */
-    public static void cabDriverTricks(){
+    public static void cabDriverTricks() {
         Scanner scanner = new Scanner(System.in);
 
         String str = scanner.nextLine();
         int real = 0;
-        for (char c : str.toCharArray()){
+        for (char c : str.toCharArray()) {
             int i = c - '0';
-            if(i > 4){
+            if (i > 4) {
                 i--;
             }
             real = real * 9 + i;
@@ -275,33 +253,33 @@ public class StringTest {
     /**
      * 最富有小家庭
      */
-    public static void richestSmallFamily(){
+    public static void richestSmallFamily() {
         Scanner scanner = new Scanner(System.in);
 
         int n = Integer.parseInt(scanner.nextLine());
 
         int[] nums = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         Map<Integer, Integer> map = new HashMap<>();
-        while(n > 1 && scanner.hasNextLine()){
+        while (n > 1 && scanner.hasNextLine()) {
             int[] single = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
             int p = single[0];
             int c = single[1];
             if (map.containsKey(p)) {
-                map.put(p, map.getOrDefault(p, 0) + nums[c-1]);
+                map.put(p, map.getOrDefault(p, 0) + nums[c - 1]);
             } else {
-                map.put(p, nums[p-1] + nums[c-1]);
+                map.put(p, nums[p - 1] + nums[c - 1]);
             }
-            n --;
+            n--;
         }
         List<Integer> sortList = map.values().stream().sorted(Integer::compareTo).collect(Collectors.toList());
 
-        System.out.println(sortList.get(sortList.size()-1));
+        System.out.println(sortList.get(sortList.size() - 1));
     }
 
     /**
      * 开源项目热门列表
      */
-    public static void hotListOfOpenSourceProjects(){
+    public static void hotListOfOpenSourceProjects() {
 //        5
 //        5 6 6 1 2
 //        camila 13 88 46 26 169
@@ -331,16 +309,101 @@ public class StringTest {
         }).collect(Collectors.toList()).forEach(f -> System.out.println(f.getKey()));
     }
 
-    /**
-     * 获取总和
-     *
-     * @return int
-     */
-    private static int getSum(int[] nums, String[] project){
+    private static int getSum(int[] nums, String[] project) {
         int sum = 0;
-        for(int i = 0; i < nums.length; i++){
-            sum = sum + nums[i] * Integer.parseInt(project[i+1]);
+        for (int i = 0; i < nums.length; i++) {
+            sum = sum + nums[i] * Integer.parseInt(project[i + 1]);
         }
         return sum;
+    }
+
+    /**
+     * 身高差排序
+     */
+    public static void sortDyHeightDifference() {
+        Scanner scanner = new Scanner(System.in);
+
+        int h = scanner.nextInt();
+        int n = scanner.nextInt();
+
+        scanner.nextLine();
+
+        int[] heightArray = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        n = Math.min(n, heightArray.length);
+        Map<Integer, Integer> heightMap = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            heightMap.put(heightArray[i], Math.abs(heightArray[i] - h));
+        }
+
+        heightMap.entrySet().stream().sorted((entry, entry1) -> {
+            if (!entry1.getValue().equals(entry.getValue())) {
+                return entry.getValue() - entry1.getValue();
+            } else {
+                return entry.getKey() - entry1.getKey();
+            }
+        }).collect(Collectors.toList()).forEach(entry -> System.out.print(entry.getKey() + " "));
+    }
+
+    /**
+     * 土地分配
+     */
+    public static void landDistribution() {
+        Scanner scanner = new Scanner(System.in);
+        int m = scanner.nextInt();
+        int n = scanner.nextInt();
+
+        scanner.nextLine();
+
+        Map<Integer, List<int[]>> map = new HashMap();
+        for (int i = 0; i < m; i++) {
+            int[] array = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            for (int j = 0; j < n; j++) {
+                int value = array[j];
+                if (value > 0) {
+                    int[] single = new int[]{i, j};
+                    List<int[]> orDefault = map.getOrDefault(array[j], new ArrayList<>());
+                    orDefault.add(single);
+                    map.put(array[j], orDefault);
+                }
+            }
+        }
+
+        int maxArea = 0;
+        for (Map.Entry<Integer, List<int[]>> entry : map.entrySet()) {
+            List<int[]> value = entry.getValue();
+            List<Integer> xList = new ArrayList<>();
+            List<Integer> yList = new ArrayList<>();
+            for (int[] ints : value) {
+                xList.add(ints[0]);
+                yList.add(ints[1]);
+            }
+            Integer xMin = xList.stream().min(Integer::compareTo).get();
+            Integer xMax = xList.stream().max(Integer::compareTo).get();
+            Integer yMin = yList.stream().min(Integer::compareTo).get();
+            Integer yMax = yList.stream().max(Integer::compareTo).get();
+
+            int area = (xMax - xMin + 1) * (yMax - yMin + 1);
+            maxArea = Math.max(maxArea, area);
+        }
+
+        System.out.println(maxArea);
+    }
+
+    /**
+     * 银饰的重量
+     */
+    public static void weightOfSilverJewelry() {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+
+        scanner.nextLine();
+
+        int[] values = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        n = Math.min(n, values.length);
+        int l = 0;
+        while (n >= 3) {
+
+        }
     }
 }
