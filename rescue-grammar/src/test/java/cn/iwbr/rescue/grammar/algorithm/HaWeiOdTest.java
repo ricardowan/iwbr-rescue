@@ -1,17 +1,18 @@
-package cn.iwbr.rescue.grammar.base;
+package cn.iwbr.rescue.grammar.algorithm;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StringTest {
+public class HaWeiOdTest {
 
     static int total = 0;
 
     static int res = Integer.MAX_VALUE;
 
+    static int[][] dirs = new int[][]{{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
     public static void main(String[] args) {
-        landDistribution();
+        binaryConversion();
     }
 
     /**
@@ -405,5 +406,280 @@ public class StringTest {
         while (n >= 3) {
 
         }
+    }
+
+    /**
+     * 最小字符串
+     */
+    public static void minimumString() {
+        Scanner scanner = new Scanner(System.in);
+
+        String str = scanner.next();
+        char[] values = str.toCharArray();
+
+        char[] sortStr = str.toCharArray();
+        Arrays.sort(sortStr);
+
+        for (int i = 0; i < values.length; i++) {
+            if (sortStr[i] != values[i]) {
+                int temIndex = -1;
+                for (int j = 0; j < sortStr.length; j++) {
+                    if (sortStr[j] != values[i]) {
+                        temIndex = j;
+                    }
+                }
+                values[temIndex] = values[i];
+                values[i] = sortStr[i];
+                break;
+            }
+        }
+
+        System.out.println(new String(values));
+    }
+
+    /**
+     * 学生成绩排名
+     */
+    public static void rankingOfGrades() {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        scanner.nextLine();
+
+        String[] xkArray = scanner.nextLine().split(" ");
+
+        Map<String, int[]> ranks = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            String[] stu = scanner.nextLine().split(" ");
+            int[] values = new int[m + 1];
+            int total = 0;
+            for (int j = 0; j < m; j++) {
+                int single = Integer.parseInt(stu[j + 1]);
+                values[j] = single;
+                total += single;
+            }
+            values[m] = total;
+            ranks.put(stu[0], values);
+        }
+
+        String next = scanner.next();
+        int index = -1;
+        for (int i = 0; i < xkArray.length; i++) {
+            if (next.equals(xkArray[i])) {
+                index = i;
+                break;
+            }
+        }
+
+        final int finalIndex = index;
+        ranks.entrySet().stream().sorted((entry, entry1) -> {
+            if (finalIndex == -1) {
+                return entry.getValue()[m] - entry1.getValue()[m];
+            } else {
+                return entry.getValue()[finalIndex] - entry1.getValue()[finalIndex];
+            }
+        }).collect(Collectors.toList()).forEach(f -> System.out.print(f.getKey() + " "));
+
+    }
+
+    /**
+     * RSA加密算法、素数之积
+     */
+    public static void RSA() {
+        Scanner scanner = new Scanner(System.in);
+
+        int num = scanner.nextInt();
+
+        if (isPrime(num)) {
+            System.out.println("-1 -1");
+            return;
+        }
+
+        for (int i = 2; i <= Math.sqrt(num); i++) {
+            if (num % i == 0) {
+                int other = num / i;
+                if (isPrime(other) && isPrime(i)) {
+                    System.out.println(i > other ? other + " " + i : i + " " + other);
+                    return;
+                }
+            }
+        }
+
+        System.out.println("-1 -1");
+    }
+
+    /**
+     * 判断一个数是否是素数
+     * 素数：一个大于1的自然数，除了1和它自身外，不能被其他自然数整除的数叫做质数（任何一个数字n，都可以写成 n = a×b的形式，但是素数不行）
+     * 50以内的素数：2、3、5、7、11、13、17、19、23、29、31、37、41 、43、47
+     *
+     * @param number 编号
+     * @return boolean
+     */
+    private static boolean isPrime(int number) {
+        if (number <= 1) {
+            return false;
+        }
+
+        for (int i = 2; i <= Math.sqrt(number); i++) {
+            if (number % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 购买宝石
+     */
+    public static void buyGems() {
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+
+        int[] nums = new int[n];
+        for (int i = 0; i < n; i++) {
+            nums[i] = scanner.nextInt();
+        }
+
+        int money = scanner.nextInt();
+
+        int l = 0, r = 0, max = 0, sum = 0;
+        while (r < nums.length) {
+            sum = sum + nums[r];
+            if (sum > money) {
+                sum -= nums[l];
+                l++;
+            }
+            max = Math.max(max, r - l + 1);
+            r++;
+        }
+        System.out.println(max);
+    }
+
+    /**
+     * 寻找聚餐地点
+     */
+    public static void findingMeetPlace() {
+        Scanner scanner = new Scanner(System.in);
+
+        int m = scanner.nextInt();
+        int n = scanner.nextInt();
+
+        scanner.nextLine();
+
+        // 两个人的位置
+        List<int[]> positions = new ArrayList<>();
+        // 聚餐地点
+        List<int[]> targetList = new ArrayList<>();
+        // 完整图
+        int[][] map = new int[m][n];
+        //  构建图
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int single = scanner.nextInt();
+                if (single == 3) {
+                    targetList.add(new int[]{i, j});
+                }
+                if (single == 2) {
+                    positions.add(new int[]{i, j});
+                }
+                map[i][j] = single;
+            }
+        }
+
+        int[] p1 = positions.get(0);
+        int[] p2 = positions.get(1);
+        boolean[][][] arrived = new boolean[m][n][2];
+
+        int total = 0;
+        for (int[] tar : targetList) {
+            arrived = new boolean[m][n][2];
+            if (arriveDfs(p1, tar, map, arrived, 0)) {
+                arrived = new boolean[m][n][2];
+                if (arriveDfs(p2, tar, map, arrived, 1)) {
+                    total++;
+                }
+            }
+        }
+        System.out.println(total);
+    }
+
+    private static boolean arriveDfs(int[] currentPoint, int[] targetPoint, int[][] map, boolean[][][] arrived, int p) {
+        System.out.println(Arrays.toString(currentPoint) + " " + map[currentPoint[0]][currentPoint[1]] + " " + Arrays.toString(targetPoint));
+        // 如果当前点就是目标点则返回
+        if (currentPoint[0] == targetPoint[0] && currentPoint[1] == targetPoint[1]) {
+            System.out.println("进来了！");
+            return true;
+        }
+
+        for (int[] dir : dirs) {
+            int x = currentPoint[0] + dir[0];
+            int y = currentPoint[1] + dir[1];
+            // 如果已经访问过、超出边界、或者是障碍物则跳过
+            if (x < 0 || x >= map.length || y < 0 || y >= map[0].length || map[x][y] == 1 || arrived[x][y][p]) {
+                continue;
+            }
+            arrived[x][y][p] = true;
+            if (arriveDfs(new int[]{x, y}, targetPoint, map, arrived, p)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 服务器组网
+     */
+    public static void serverNetworking(){
+        Scanner scanner = new Scanner(System.in);
+
+        int n = scanner.nextInt();
+        int m = scanner.nextInt();
+
+        scanner.nextLine();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+
+            }
+        }
+
+
+
+    }
+
+    /**
+     * 二进制转换
+     */
+    public static void binaryConversion(){
+        Scanner scanner = new Scanner(System.in);
+
+        int i = scanner.nextInt();
+        String bin = Integer.toBinaryString(i);
+        int m = getOneCount(bin);
+
+        int j = i + 1;
+        while (j > i) {
+            String tempBin = Integer.toBinaryString(j);
+            if (m == getOneCount(tempBin)) {
+                break;
+            }
+            j++;
+        }
+        System.out.println(j);
+    }
+
+    private static int getOneCount(String bin){
+        int count = 0;
+        for (int i = 0; i < bin.length(); i++){
+            if(bin.charAt(i) == '1'){
+                count++;
+            }
+        }
+        return count;
     }
 }
