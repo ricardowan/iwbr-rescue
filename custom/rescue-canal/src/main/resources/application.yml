@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: rescue-canal
+server:
+  port: ${port:9011}
+  servlet:
+    context-path: /rescue-canal
+    encoding:
+      charset: UTF-8
+      force: true
+  tomcat:
+    max-http-form-post-size: -1
+canal:
+  server: 49.235.186.30:11111
+  destination: example
+logging:
+  level:
+    top.javatool: error
