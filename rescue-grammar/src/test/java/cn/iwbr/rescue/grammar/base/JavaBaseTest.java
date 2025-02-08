@@ -148,16 +148,32 @@ public class JavaBaseTest {
         String pop = stack.pop();
         String peek = stack.peek();
 
+        // 能实现队列也能实现栈
         ArrayDeque<String> queue = new ArrayDeque();
         queue.offer("string");
         queue.poll();
 
         queue.addFirst("queue");
-        queue.offerFirst("asdaj");
-        queue.removeFirst();
-        queue.pollFirst();
-        queue.getFirst();
+        queue.addLast("asdaj");
+
+        queue.removeFirst();;
         queue.peekFirst();
+
+        // 队列操作
+        // 将sss加入到队列尾部
+        queue.offer("sss");
+        // 移除并返回队列头部元素
+        queue.poll();
+        // 查看队列头部元素，但不移除它
+        queue.peek();
+
+        // 栈操作
+        // 将sss压入栈顶
+        queue.push("sss");
+        // 将栈顶元素弹出
+        queue.pop();
+        // 查看栈顶元素但不弹出
+        queue.peek();
 
         PriorityQueue priorityQueue = new PriorityQueue();
         priorityQueue.offer("");

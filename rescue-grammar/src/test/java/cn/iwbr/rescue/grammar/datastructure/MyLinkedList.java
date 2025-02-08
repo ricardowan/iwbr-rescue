@@ -2,6 +2,11 @@ package cn.iwbr.rescue.grammar.datastructure;
 
 import java.util.NoSuchElementException;
 
+/**
+ * @description: 自定义双向链表并封装增删改查的API
+ * @author: <a href="mailto:wangbaorui@supermap.com">wangbaorui</a>
+ * @date: 2025/02/08
+ */
 public class MyLinkedList<T> {
 
     // 虚拟头尾节点（能够使得链表的增删改查的操作的时间复杂度变成O(1)）
