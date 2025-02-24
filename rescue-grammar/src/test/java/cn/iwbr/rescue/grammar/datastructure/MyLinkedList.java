@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
  */
 public class MyLinkedList<T> {
 
-    // 虚拟头尾节点（能够使得链表的增删改查的操作的时间复杂度变成O(1)）
+    // 虚拟头尾节点（能够使得链表首尾位置的增删改查的操作的时间复杂度变成O(1)）
     final private Node<T> head, tail;
 
     private int size;
@@ -112,7 +112,7 @@ public class MyLinkedList<T> {
         prev.next = this.tail;
 
         delete.next = null;
-        delete.next = null;
+        delete.prev = null;
 
         this.size--;
         return delete.val;

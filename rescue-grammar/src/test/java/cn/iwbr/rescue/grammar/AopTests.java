@@ -100,11 +100,11 @@ public class AopTests {
     @Test
     public void JdkDynamicProxy(){
         // 创建一个被代理对象的实例，这个实例可以来自很多地方，比如在spring里面主要来自SpringIoc容器管理的bean的实例
-        MyInterfaceImpl myInterface = new MyInterfaceImpl();
+        MyInterface myInterface = new MyInterfaceImpl();
         // 自定义一个InvocationHandler的实现类并实现invoke方法，在这个方法里面实现切面功能
         MyInvocationHandler invocationHandler = new MyInvocationHandler(myInterface);
         // 使用Proxy的newProxyInstance方法创建一个代理对象示例
-        MyInterface proxyMyInterface = (MyInterface) Proxy.newProxyInstance(MyInterface.class.getClassLoader(), new Class[]{MyInterface.class}, invocationHandler);
+        MyInterface proxyMyInterface = (MyInterface) Proxy.newProxyInstance(MyInterface.class.getClassLoader(), MyInterface.class.getInterfaces(), invocationHandler);
         // 通过代理对象调被代理对象的方法
         proxyMyInterface.someMethod();
     }
