@@ -52,6 +52,7 @@ public class MyArrayHashMap<K, V> {
         int index = map.get(key);
         Node<K, V> node = arr.get(index);
 
+        // 下面的操作都是为了避免数组搬运数据，降低操作的时间复杂度
         // 1. 最后一个元素 e 和第 index 个元素 node 换位置
         Node<K, V> e = arr.get(arr.size() - 1);
         arr.set(index, e);
@@ -90,7 +91,7 @@ public class MyArrayHashMap<K, V> {
         map.put(4, 4);
         map.put(5, 5);
 
-        System.out.println(map.get(1)); // 1
+        System.out.println(map.get(1));
         System.out.println(map.randomKey());
 
         map.remove(4);

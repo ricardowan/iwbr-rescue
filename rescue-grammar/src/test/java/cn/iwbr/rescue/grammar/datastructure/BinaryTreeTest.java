@@ -93,7 +93,7 @@ public class BinaryTreeTest {
 
         // 递归遍历左右节点
         traverseDfs(root.left, path, paths);
-        traverseDfs(root.left, path, paths);
+        traverseDfs(root.right, path, paths);
 
         // 后序位置离开节点的时候将节点从path中移除
         path.pop();
