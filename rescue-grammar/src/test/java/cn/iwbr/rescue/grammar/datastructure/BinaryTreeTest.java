@@ -2,10 +2,7 @@ package cn.iwbr.rescue.grammar.datastructure;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @description: 二叉树测试
@@ -286,5 +283,35 @@ public class BinaryTreeTest {
             }
             depth++;
         }
+    }
+
+    void findPath(){
+        List<MultiTreeNode> pathList = new LinkedList<>();
+        findPath();
+    }
+
+    /**
+     * 查找路径
+     * 因为对于树结构来说，只能由父节点指向子节点，所以从根节点 root 出发，到任意一个节点 targetNode 的路径都是唯一的
+     * 换句话说，我遍历一遍树结构的所有节点之后，必然可以找到 root 到 targetNode 的唯一路径：
+     * @param root     根
+     * @param target   目标
+     * @param pathList 路径列表
+     */
+    void findPath(MultiTreeNode root, MultiTreeNode target, LinkedList<MultiTreeNode> pathList) {
+        if (root == null || target == null) {
+            return;
+        }
+        // 前序位置
+        pathList.addLast(root);
+        if (root.val == target.val) {
+            System.out.println("find path:" + pathList);
+        }
+        for (MultiTreeNode child : root.children) {
+            findPath(child, target, pathList);
+        }
+
+        // 后序位置
+        pathList.removeLast();
     }
 }
