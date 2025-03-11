@@ -480,6 +480,85 @@ public class LinkedListExercise {
         return lists;
     }
 
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode result = new ListNode(-100), p = result;
+
+        ArrayDeque<ListNode> deque = new ArrayDeque<>();
+        ArrayDeque<ListNode> deque1 = new ArrayDeque<>();
+        while (l1 != null) {
+            deque.push(l1);
+            l1 = l1.next;
+        }
+        while (l2 != null) {
+            deque1.push(l2);
+            l2 = l2.next;
+        }
+        int a = deque.size();
+        int b = deque1.size();
+        ArrayDeque<ListNode> deque2 = new ArrayDeque<>();
+        boolean add = false;
+        if (deque1.size() > deque.size()) {
+            while (deque1.size() > 0) {
+                ListNode pop = deque1.pop();
+                int total = pop.val;
+                if (deque.size() > 0) {
+                    ListNode pop1 = deque.pop();
+                    total = pop.val + pop1.val;
+                }
+                if (add) {
+                    total += 1;
+                }
+                if (total >= 10) {
+                    total = total % 10;
+                    add = true;
+                } else {
+                    add = false;
+                }
+                deque2.push(new ListNode(total));
+            }
+        } else {
+            while (deque.size() > 0) {
+                ListNode pop = deque.pop();
+                int total = pop.val;
+                if (deque1.size() > 0) {
+                    ListNode pop1 = deque1.pop();
+                    total = pop.val + pop1.val;
+                }
+                if (add) {
+                    total += 1;
+                }
+                if (total >= 10) {
+                    total = total % 10;
+                    add = true;
+                } else {
+                    add = false;
+                }
+                deque2.push(new ListNode(total));
+            }
+        }
+
+        if (add) {
+            ListNode peek = deque2.peek();
+            if ((a == b) || peek.val == 0) {
+                deque2.push(new ListNode(1));
+            } else {
+                int val = peek.val + 1;
+                if (val >= 10) {
+                    val = val % 10;
+                }
+                peek.val = val;
+                deque2.push(new ListNode(1));
+            }
+        }
+
+        while (deque2.size() > 0) {
+            p.next = deque2.pop();
+            p = p.next;
+        }
+
+        return result.next;
+    }
+
     // 返回链表的倒数第 k 个节点
     private ListNode findFromEnd(ListNode head, int k) {
         ListNode p1 = head;
@@ -528,7 +607,7 @@ public class LinkedListExercise {
 
     @Test
     public void test(){
-        nthUglyNumber(5, 2, 11, 13);
+        addTwoNumbers(new ListNode(3, new ListNode(7)), new ListNode(9, new ListNode(2)));
     }
 
     /**
@@ -536,30 +615,29 @@ public class LinkedListExercise {
      */
     @Test
     public void calculateFundCostPrice(){
-        Map<String, double[]> primes = new HashMap<>();
-        primes.put("013172", new double[] {0.8695, 10700.34, 13282.45});
-        primes.put("022385", new double[] {1.2016, 10390.62, 9126.59});
-        primes.put("015283", new double[] {1.5356, 11039.15, 7557.44});
-        primes.put("012769", new double[] {1.3255, 9378.21, 7437.71});
+        Map<String, double[]> primes = new LinkedHashMap<>();
+        primes.put("001410", new double[] {4.1120, 10241.59, 2490.66});
+        primes.put("005311", new double[] {1.8307, 11617.59, 6345.98});
+        primes.put("022385", new double[] {1.1655, 10637.04, 9126.59});
+        primes.put("018125", new double[] {2.1204, 11523.91, 5434.78});
+        primes.put("015283", new double[] {1.4897, 11258.32, 7557.44});
+        primes.put("017512", new double[] {1.6447, 11284.39, 6861.06});
+        primes.put("014881", new double[] {1.1841, 10955.78, 9252.41});
+        primes.put("011840", new double[] {1.0750, 10440.95, 9712.51});
+        primes.put("006614", new double[] {1.1578, 11437.32, 9878.49});
+        primes.put("020336", new double[] {1.5737, 10625.80, 6752.11});
+        primes.put("009881", new double[] {0.6787, 10020.67, 14764.51});
+        primes.put("012769", new double[] {1.2844, 9552.99, 7437.71});
+        primes.put("004753", new double[] {0.8635, 9899.61, 11464.52});
+        primes.put("013172", new double[] {0.8394, 11149.29, 13282.45});
+        primes.put("008282", new double[] {1.4628, 9915.27, 6778.28});
+        primes.put("020624", new double[] {1.6085, 10194.58, 6337.94});
+        primes.put("020459", new double[] {1.3336, 10153.03, 7613.25});
+        primes.put("002170", new double[] {3.4100, 10121.39, 2968.15});
+        primes.put("017526", new double[] {1.351, 9989.65, 7394.26});
+        primes.put("007301", new double[] {2.2321, 10100.01, 4524.89});
+        primes.put("015968", new double[] {1.2377, 10011.32, 8088.65});
 
-        primes.put("005311", new double[] {1.8867, 11437.36, 6345.98});
-        primes.put("020336", new double[] {1.6355, 10559.62, 6752.11});
-        primes.put("004753", new double[] {0.8843, 9700.13, 11464.52});
-        primes.put("006614", new double[] {1.1976, 11367.18, 9878.49});
-
-        primes.put("011840", new double[] {1.1020, 10303.03, 9712.51});
-        primes.put("008282", new double[] {1.4878, 9798.68, 6778.28});
-        primes.put("014881", new double[] {1.1787, 10617.14, 9252.41});
-        primes.put("007301", new double[] {2.2694, 10000.01, 4524.89});
-
-        primes.put("020624", new double[] {1.6208, 10005.71, 6337.94});
-        primes.put("001410", new double[] {4.1862, 10166.87, 2490.66});
-        primes.put("009881", new double[] {0.6839, 9883.36, 14764.51});
-        primes.put("020459", new double[] {1.3503, 10124.10, 7613.25});
-
-        primes.put("002170", new double[] {3.4495, 10086.96, 2968.15});
-        primes.put("018125", new double[] {2.0808, 11296.19, 5434.78});
-        primes.put("017512", new double[] {1.6238, 11306.34, 6861.06});
         // Map的key是基金代码或者基金名称
         // 数组中有三个double类型的值:
         // 第一个当前净值（currentPrice）、第二个是当前的持有额（currentHolding）、第三个是当前持有份额（currentPortion）

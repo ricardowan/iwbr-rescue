@@ -53,6 +53,7 @@ public class SortAlgorithmTest {
     }
 
     /**
+     *
      * 选择排序测试
      * 思路：遍历数组，找到某个元素后面的元素中的最小值，然后与当前元素替换位置
      */
@@ -179,5 +180,47 @@ public class SortAlgorithmTest {
             }
         }
         return -1;
+    }
+
+
+    // 遍历数组找到最小的值，然后将他与数组的第一位交换位置，依次类推直到全部有序
+    private void sort(int [] nums){
+        int n = nums.length;
+        int sortedIndex = 0;
+        while (sortedIndex < n){
+            // 查询[sortedIndex,n)这个区间里面最小的值，然后跟sortedIndex交换位置
+            int minIndex = sortedIndex;
+            for (int i = sortedIndex + 1; i < n; i++) {
+                if (nums[i] < nums[minIndex]) {
+                    minIndex = i;
+                }
+            }
+            int tmp = nums[sortedIndex];
+            nums[sortedIndex] = nums[minIndex];
+            nums[minIndex] = tmp;
+
+            sortedIndex++;
+        }
+    }
+
+    // 倒序遍历数组，然后逐个与前面的元素比较，如果比前面的的值小的话，就与前面的值交换
+    private void sort1(int [] nums){
+        int n = nums.length;
+        int sortedIndex = 0;
+        while (sortedIndex < n){
+            boolean swap = false;
+            for (int i = n-1; i > sortedIndex; i--) {
+                if (nums[i] < nums[i - 1]) {
+                    int tem = nums[i];
+                    nums[i] = nums[i - 1];
+                    nums[i - 1] = tem;
+                    swap = true;
+                }
+            }
+            if(!swap){
+                break;
+            }
+            sortedIndex++;
+        }
     }
 }
